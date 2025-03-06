@@ -1,5 +1,6 @@
 import { TicketAggregated } from "@acme/shared-models";
 import Loading from "client/src/components/loading";
+import { cn } from "client/src/lib/tw";
 import { cloneElement, ReactElement, ReactNode } from "react";
 
 export interface TicketListProps {
@@ -29,13 +30,14 @@ const TicketList = ({
     <section className="relative">
       <ul>
         {tickets?.map((ticket) => (
-          <li
-            key={ticket.id}
-            className="cursor-pointer"
-            title="Click to view details"
-            onClick={() => onNavigateToTicketDetails?.(ticket.id)}
-          >
-            <span className={ticket.completed ? "line-through" : ""}>
+          <li key={ticket.id} title="Click to view details">
+            <span
+              onClick={() => onNavigateToTicketDetails?.(ticket.id)}
+              className={cn(
+                ticket.completed ? "line-through" : "",
+                "cursor-pointer"
+              )}
+            >
               Ticket: {ticket.id} - {ticket.description}
             </span>
 

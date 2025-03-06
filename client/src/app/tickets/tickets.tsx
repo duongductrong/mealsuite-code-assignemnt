@@ -19,6 +19,7 @@ import TicketListFilter, {
   FilterChangeValue,
 } from "./components/ticket-list-filter";
 import { useFilterStatus } from "./hooks/use-filter-status";
+import { useUnassignTicket } from "client/src/lib/api/ticket/unassign-ticket";
 
 export interface TicketsProps {}
 
@@ -77,7 +78,17 @@ export function Tickets(props: TicketsProps) {
     },
 
     onError(error) {
-      toast.error(error?.message || "Mark as complete or incomplete failed");
+      toast.error(error?.message || "Failed to assign ticket");
+    },
+  });
+
+  const { mutate: unassignTicket } = useUnassignTicket({
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: useTickets.getKey() });
+    },
+
+    onError(error) {
+      toast.error(error?.message || "Failed to unassign ticket");
     },
   });
 
@@ -104,7 +115,11 @@ export function Tickets(props: TicketsProps) {
     ticketId,
     userId
   ) => {
-    assignTicketTo({ ticketId, userId });
+    if (userId === -1) {
+      unassignTicket({ ticketId });
+    } else {
+      assignTicketTo({ ticketId, userId });
+    }
   };
 
   const handleNavigateToTicketDetails: TicketListProps["onNavigateToTicketDetails"] =

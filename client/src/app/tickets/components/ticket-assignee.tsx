@@ -21,7 +21,10 @@ const TicketAssignee = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setValue(e.target.value);
-    onAssigneeChange?.(ticketId!, Number(e.target.value));
+    onAssigneeChange?.(
+      ticketId!,
+      e.target.value === "" ? -1 : Number(e.target.value)
+    );
   };
 
   return (
@@ -35,13 +38,11 @@ const TicketAssignee = ({
     >
       <span>Assignee:</span>{" "}
       <select
-        className="bg-black text-white w-[50px]"
+        className="bg-black text-white w-[70px]"
         value={value}
         onChange={handleChange}
       >
-        <option value="" disabled>
-          Select Assignee
-        </option>
+        <option value="">Select Assignee</option>
         {users?.map((user) => (
           <option key={user.id} value={user.id}>
             {user.name}
