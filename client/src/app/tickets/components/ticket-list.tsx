@@ -1,6 +1,7 @@
 import { TicketAggregated } from "@acme/shared-models";
 import Loading from "client/src/components/loading";
 import { cloneElement, ReactElement, ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
 export interface TicketListProps {
   tickets?: TicketAggregated[];
@@ -20,13 +21,20 @@ const TicketList = ({
   assigneeComponent,
   onToggleMarkAsCompleteTicket,
 }: TicketListProps) => {
+  const navigate = useNavigate();
+
   if (!tickets?.length) return <div>Data not found</div>;
 
   return (
     <section className="relative">
       <ul>
         {tickets?.map((ticket) => (
-          <li key={ticket.id}>
+          <li
+            key={ticket.id}
+            className="cursor-pointer"
+            title="Click to view details"
+            onClick={() => navigate(`/${ticket.id}`)}
+          >
             <span className={ticket.completed ? "line-through" : ""}>
               Ticket: {ticket.id} - {ticket.description}
             </span>
