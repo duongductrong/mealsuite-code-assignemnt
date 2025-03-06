@@ -3,11 +3,13 @@ import {
   useTicketsAggregated,
   UseTicketsAggregatedFilter,
 } from "client/src/hooks/use-tickets-aggregated";
+import { useAssignTicket } from "client/src/lib/api/ticket/assign-ticket";
 import { useCreateTicket } from "client/src/lib/api/ticket/create-ticket";
 import { useTickets } from "client/src/lib/api/ticket/get-tickets";
 import { useMarkAsComplete } from "client/src/lib/api/ticket/mark-as-complete";
 import { useMarkAsInComplete } from "client/src/lib/api/ticket/mark-as-incomplete";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import AddTicket from "./components/add-ticket";
 import TicketAssignee, {
   TicketAssigneeProps,
@@ -17,12 +19,12 @@ import TicketListFilter, {
   FilterChangeValue,
 } from "./components/ticket-list-filter";
 import { useFilterStatus } from "./hooks/use-filter-status";
-import { useAssignTicket } from "client/src/lib/api/ticket/assign-ticket";
 
 export interface TicketsProps {}
 
 export function Tickets(props: TicketsProps) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { status, setStatus } = useFilterStatus();
 
   const {
@@ -105,6 +107,11 @@ export function Tickets(props: TicketsProps) {
     assignTicketTo({ ticketId, userId });
   };
 
+  const handleNavigateToTicketDetails: TicketListProps["onNavigateToTicketDetails"] =
+    (id) => {
+      navigate(`/${id}`);
+    };
+
   return (
     <div>
       <h2 className="text-base font-semibold">Tickets</h2>
@@ -115,6 +122,7 @@ export function Tickets(props: TicketsProps) {
         tickets={tickets}
         loading={isLoading || isFetching || isCreatingTicket}
         onToggleMarkAsCompleteTicket={handleToggleMarkAsCompleteTicket}
+        onNavigateToTicketDetails={handleNavigateToTicketDetails}
         assigneeComponent={
           <TicketAssignee
             users={users || []}
