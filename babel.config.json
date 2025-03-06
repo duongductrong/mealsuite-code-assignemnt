@@ -1,5 +1,12 @@
 {
-  "babelrcRoots": [
-    "*"
+  "babelrcRoots": ["*"],
+  "plugins": [
+    [
+      "transform-postcss",
+      {
+        "config": "postcss.config.mjs"
+      }
+    ]
   ]
 }
+
